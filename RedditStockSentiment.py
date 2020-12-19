@@ -16,7 +16,7 @@ nltk.download('stopwords')
 
 reddit = praw.Reddit(client_id=f'{}',
                     client_secret=f'{}',
-                    user_agent=f'Quick-Sherbet-1373')
+                    user_agent=f'{}')
 
 
 sub_reddits = reddit.subreddit('wallstreetbets')
