@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
@@ -15,14 +13,18 @@ import os
 nltk.download('vader_lexicon')
 nltk.download('stopwords')
 
-reddit = praw.Reddit(client_id=f'{os.environ.get('reddit_id')}',
-                    client_secret=f'{os.environ.get('reddit_secret')}',
-                    user_agent=f'{os.environ.get('reddit_user_agent')}')
+reddit = praw.Reddit(
+    client_id= os.environ.get('reddit_id'),
+    client_secret=os.environ.get('reddit_secret'),
+    user_agent=os.environ.get('reddit_user_agent')
+)
+
+
 
 
 
 sub_reddits = reddit.subreddit('wallstreetbets')
-stocks = ["SPCE", "LULU", "CCL", "SDC"]
+stocks = ["SPCE", "LULU", "CCL", "SDC","TSLA"]
 
 
 def commentSentiment(ticker, urlT):
@@ -96,7 +98,9 @@ def get_date(date):
 submission_statistics = []
 d = {}
 for ticker in stocks:
+    print(ticker)
     for submission in reddit.subreddit('wallstreetbets').search(ticker, limit=130):
+        print(submission)
         if submission.domain != "self.wallstreetbets":
             continue
         d = {}
