@@ -9,14 +9,16 @@ import math
 import datetime as dt
 import pandas as pd
 import numpy as np
+import os
 
 
 nltk.download('vader_lexicon')
 nltk.download('stopwords')
 
-reddit = praw.Reddit(client_id=f'{}',
-                    client_secret=f'{}',
-                    user_agent=f'{}')
+reddit = praw.Reddit(client_id=f'{os.environ.get('reddit_id')}',
+                    client_secret=f'{os.environ.get('reddit_secret')}',
+                    user_agent=f'{os.environ.get('reddit_user_agent')}')
+
 
 
 sub_reddits = reddit.subreddit('wallstreetbets')
