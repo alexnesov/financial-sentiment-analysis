@@ -142,16 +142,6 @@ dfSentimentStocks.to_csv('Reddit_Sentiment_Equity.csv', index=False)
 df = pd.read_csv('Reddit_Sentiment_Equity.csv')
 df_tesla = df.loc[df['ticker'] == 'TSLA']
 
-
-
-#df_tesla.dtypes
-
-
-# as-is
-# yyyy-mm-dd
-# to-be
-
-
 def toDatetime(df):
     """
     Casting "Object" colum to datetime
@@ -162,3 +152,21 @@ def toDatetime(df):
 toDatetime(df_tesla)
 
 
+
+
+
+from datetime import datetime
+
+df_tesla = df_tesla.sort_values(by='timestamp_dt')
+
+
+df_tesla.dtypes
+
+# Selecting only rows after certain date
+mask = df_tesla['timestamp_dt']>'2020-09-15 17:53:28'
+dfDate = df_tesla.loc[mask]
+
+
+import plotly.graph_objects as go
+fig = go.Figure(data=go.Scatter(x=dfDate.timestamp_dt, y=dfDate.upvote_ratio))
+fig.show()
