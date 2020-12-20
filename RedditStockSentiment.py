@@ -21,8 +21,6 @@ reddit = praw.Reddit(
 
 
 
-
-
 sub_reddits = reddit.subreddit('wallstreetbets')
 stocks = ["SPCE", "LULU", "CCL", "SDC","TSLA"]
 
@@ -97,27 +95,32 @@ def get_date(date):
 
 submission_statistics = []
 d = {}
-for ticker in stocks:
-    print(ticker)
-    for submission in reddit.subreddit('wallstreetbets').search(ticker, limit=130):
-        print(submission)
-        if submission.domain != "self.wallstreetbets":
-            continue
-        d = {}
-        d['ticker'] = ticker
-        d['num_comments'] = submission.num_comments
-        d['comment_sentiment_average'] = commentSentiment(ticker, submission.url)
-        if d['comment_sentiment_average'] == 0.000000:
-            continue
-        d['latest_comment_date'] = latestComment(ticker, submission.url)
-        d['score'] = submission.score
-        d['upvote_ratio'] = submission.upvote_ratio
-        d['date'] = submission.created_utc
-        d['domain'] = submission.domain
-        d['num_crossposts'] = submission.num_crossposts
-        d['author'] = submission.author
-        submission_statistics.append(d)
+def research():
+    for ticker in stocks:
+        print(ticker)
+        for submission in reddit.subreddit('wallstreetbets').search(ticker, limit=130):
+            print(submission)
+            if submission.domain != "self.wallstreetbets":
+                continue
+            d = {}
+            d['ticker'] = ticker
+            d['num_comments'] = submission.num_comments
+            d['comment_sentiment_average'] = commentSentiment(ticker, submission.url)
+            if d['comment_sentiment_average'] == 0.000000:
+                continue
+            d['latest_comment_date'] = latestComment(ticker, submission.url)
+            d['score'] = submission.score
+            d['upvote_ratio'] = submission.upvote_ratio
+            d['date'] = submission.created_utc
+            d['domain'] = submission.domain
+            d['num_crossposts'] = submission.num_crossposts
+            d['author'] = submission.author
+            submission_statistics.append(d)
     
+
+# research()
+
+
 dfSentimentStocks = pd.DataFrame(submission_statistics)
 
 _timestampcreated = dfSentimentStocks["date"].apply(get_date)
@@ -130,11 +133,32 @@ dfSentimentStocks.sort_values("latest_comment_date", axis = 0, ascending = True,
 
 dfSentimentStocks
 
-
 dfSentimentStocks.author.value_counts()
-
 
 dfSentimentStocks.to_csv('Reddit_Sentiment_Equity.csv', index=False) 
 
+
+
+df = pd.read_csv('Reddit_Sentiment_Equity.csv')
+df_tesla = df.loc[df['ticker'] == 'TSLA']
+
+
+
+#df_tesla.dtypes
+
+
+# as-is
+# yyyy-mm-dd
+# to-be
+
+
+def toDatetime(df):
+    """
+    Casting "Object" colum to datetime
+    """
+#    df[['date','remove']] = df['timestamp'].str.split(' ', expand=True)
+    df['timestamp_dt'] = pd.to_datetime(df['timestamp'], format='%Y-%m-%d %H:%M:%S') 
+
+toDatetime(df_tesla)
 
 
